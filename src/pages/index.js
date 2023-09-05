@@ -3,8 +3,10 @@ import { useState } from "react";
 export default function Home() {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [message, setMessage] = useState("");
+  const [sending, setSending] = useState(false);
 
   const handleSubmit = async (event) => {
+    setSending(true);
     event.preventDefault();
 
     const data = {
@@ -27,15 +29,20 @@ export default function Home() {
 
         if (response.ok) {
           const responseData = await response.json();
-          console.log(responseData);
+          setMessage("");
+          setPhoneNumber("");
+          setSending(false);
         } else {
           console.error("Request failed with status:", response.status);
+          setSending(false);
         }
       } catch (error) {
         console.error("Request error:", error);
+        setSending(false);
       }
     } else {
       alert("Invalid phoneNumber or message");
+      setSending(false);
     }
   };
 
@@ -73,7 +80,7 @@ export default function Home() {
           <br />
           <div className="w-full flex justify-around">
             <button className="px-5 border-[1px] border-black" type="submit">
-              Send Message
+              {sending ? <p>sending....</p> : <p> Send Message</p>}
             </button>
             <Link href={"/Messages"}>
               <button className="px-5 border-[1px] border-black">

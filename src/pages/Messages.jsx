@@ -18,7 +18,7 @@ const Messages = () => {
   if (messages?.messages?.length > 0)
     return (
       <>
-        <div className="w-full flex flex-wrap justify-around h-[500px]">
+        <div className="w-full flex flex-wrap justify-around h-fit">
           {messages?.messages?.map((message) => {
             return <MessageCard message={message} />;
           })}
