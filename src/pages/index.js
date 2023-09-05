@@ -1,43 +1,81 @@
 import Link from "next/link";
-import { useState } from "react";
+import { useRef, useState } from "react";
 export default function Home() {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [message, setMessage] = useState("");
+  const [media, setMedia] = useState(null);
+  const [name, setname] = useState("");
   const [sending, setSending] = useState(false);
-
+  const mediaRef = useRef(null);
   const handleSubmit = async (event) => {
     setSending(true);
     event.preventDefault();
 
-    const data = {
-      phoneNumber,
-      message,
-    };
-
-    if (phoneNumber.length === 10 && message.length > 0) {
+    if (
+      phoneNumber.length === 10 &&
+      message.length > 0 &&
+      name.length > 1 &&
+      media !== null
+    ) {
       try {
-        const response = await fetch(
+        const videoFormData = new FormData();
+        videoFormData.append("file", media);
+        videoFormData.append("upload_preset", "s8ajszzz");
+
+        const videoResponse = await fetch(
+          "https://api.cloudinary.com/v1_1/du19shvhf/video/upload",
+          {
+            method: "POST",
+            body: videoFormData,
+          }
+        );
+        const videoData = await videoResponse.json();
+        const video_URL = await videoData.secure_url;
+
+        const response = await fetch("https://twillo-server.onrender.com/sendMediaMessage", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            phoneNumber,
+            video_URL,
+          }),
+        });
+        const messageResponse = await fetch(
           "https://twillo-server.onrender.com/sendmessage",
           {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
             },
-            body: JSON.stringify(data),
+            body: JSON.stringify({
+              phoneNumber,
+              message,
+              name,
+            }),
           }
         );
 
-        if (response.ok) {
+        if (response.ok && messageResponse.ok) {
           const responseData = await response.json();
           setMessage("");
           setPhoneNumber("");
           setSending(false);
+          setname("");
+          mediaRef.current.value = null;
         } else {
-          console.error("Request failed with status:", response.status);
+          console.error(
+            "Request failed with status:",
+            response.status,
+            messageResponse.status
+          );
+          alert(response.status);
           setSending(false);
         }
       } catch (error) {
         console.error("Request error:", error);
+        alert("Request error:", error);
         setSending(false);
       }
     } else {
@@ -53,9 +91,19 @@ export default function Home() {
       </h1>
       <div className="w-full h-screen flex justify-center items-center">
         <form
-          className="w-1/2 h-1/3 p-5 border-[1px] border-black flex flex-col justify-around items-start"
+          className="w-1/2 h-3/5 p-5 border-[1px] border-black flex flex-col justify-around items-start"
           onSubmit={handleSubmit}
         >
+          <label>
+            Name:
+            <input
+              type="text"
+              name="name"
+              value={name}
+              onChange={(e) => setname(e.target.value)}
+              className="border-[1px] border-black w-full p-1 "
+            />
+          </label>
           <label>
             Phone Number:
             <input
@@ -74,6 +122,19 @@ export default function Home() {
               name="message"
               value={message}
               onChange={(e) => setMessage(e.target.value)}
+              className="border-[1px] border-black w-full p-1 "
+            />
+          </label>
+          <label>
+            Video:
+            <input
+              type="file"
+              name="media"
+              ref={mediaRef}
+              accept=".mp4,.avi,.mpg"
+              onChange={(e) => {
+                setMedia(e.target.files[0]);
+              }}
               className="border-[1px] border-black w-full p-1 "
             />
           </label>
