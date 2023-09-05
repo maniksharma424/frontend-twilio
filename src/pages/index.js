@@ -32,17 +32,7 @@ export default function Home() {
         const videoData = await videoResponse.json();
         const video_URL = await videoData.secure_url;
 
-        const response = await fetch("https://twillo-server.onrender.com/sendMediaMessage", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            phoneNumber,
-            video_URL,
-          }),
-        });
-        const messageResponse = await fetch(
+        const response = await fetch(
           "https://twillo-server.onrender.com/sendmessage",
           {
             method: "POST",
@@ -53,11 +43,12 @@ export default function Home() {
               phoneNumber,
               message,
               name,
+              video_URL,
             }),
           }
         );
 
-        if (response.ok && messageResponse.ok) {
+        if (response.ok) {
           const responseData = await response.json();
           setMessage("");
           setPhoneNumber("");
