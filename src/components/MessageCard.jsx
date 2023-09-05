@@ -16,6 +16,10 @@ const MessageCard = ({ message }) => {
         {" "}
         <span className="font-[800] ">Message:</span> {message?.body}
       </p>
+      <p className=" text-ellipsis overflow-clip">
+        {" "}
+        <span className="font-[800] ">Video:</span> {message?.videoUrl}
+      </p>
       <p>
         {" "}
         <span className="font-[800] ">Status:</span> {message?.status}
