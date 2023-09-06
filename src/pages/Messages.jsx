@@ -17,24 +17,28 @@ const Messages = () => {
   console.log(messages);
   if (messages?.messages?.length > 0)
     return (
-      <>
+      <div className="p-10">
+        <div className="w-full flex justify-evenly">
+
+       <button
+          className="px-5 border-[1px] border-black"
+          onClick={() => {
+            getMessageStatus();
+          }}
+          >
+          REFRESH
+        </button>
+        <Link href={"/"}>
+          <button className="px-5 border-[1px] border-black">SEND NEW MESSAGE</button>
+        </Link>
+          </div>
         <div className="w-full flex flex-wrap justify-around h-fit">
           {messages?.messages?.map((message) => {
             return <MessageCard message={message} />;
           })}
         </div>
-        <button
-          className="px-5 border-[1px] border-black"
-          onClick={() => {
-            getMessageStatus();
-          }}
-        >
-          Refresh
-        </button>
-        <Link href={"/"}>
-          <button className="px-5 border-[1px] border-black">Go back</button>
-        </Link>
-      </>
+       
+      </div>
     );
   else
     return (
