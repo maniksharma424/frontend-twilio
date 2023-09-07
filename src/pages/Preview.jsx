@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import Link from "next/link";
 
 const Preview = () => {
+  const [sending, setSending] = useState(false);
   const { fromName, fromPhoneNumber, message, media, recipients } = useSelector(
     (store) => store.previewSlice
   );
@@ -13,6 +14,7 @@ const Preview = () => {
   const router = useRouter();
 
   const handleSubmit = async () => {
+    setSending(true);
     if (
       fromPhoneNumber.length === 10 &&
       message.length > 0 &&
@@ -113,7 +115,7 @@ const Preview = () => {
           }}
           className="border-[1px] w-1/6 my-1 border-black px-5 p-2 rounded-sm"
         >
-          SEND
+          {sending ? <p>Sending..</p> : <p>SEND</p>}
         </button>
         <Link href={"/"}>
           <button className="border-[1px] w-1/6 my-1 border-black px-5 p-2 rounded-sm">

@@ -22,7 +22,7 @@ const MessageCard = ({ message }) => {
       <p>
         {" "}
         <span className="font-[800] ">TO:</span> {message?.receiver} ,{" "}
-        {message?.to}
+        {message?.receiverNumber}
       </p>
       <p className=" text-ellipsis overflow-clip">
         {" "}
