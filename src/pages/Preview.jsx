@@ -4,6 +4,7 @@ import { fromJSON } from "postcss";
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Link from "next/link";
+import { useState } from "react";
 
 const Preview = () => {
   const [sending, setSending] = useState(false);
