@@ -38,7 +38,7 @@ const Preview = () => {
         const video_URL = await videoData.secure_url;
 
         const response = await fetch(
-          "http://localhost:9000/sendmessage",
+          "https://twillo-server.onrender.com/sendmessage",
           {
             method: "POST",
             headers: {
